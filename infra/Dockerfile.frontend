@@ -1,0 +1,25 @@
+# Placeholder for infra/Dockerfile.frontend
+# Use Node.js image
+FROM node:20-alpine
+
+# Set working directory
+WORKDIR /app
+
+# Copy package.json and install dependencies
+COPY package.json package-lock.json ./
+RUN npm install
+
+# Copy frontend source code
+COPY . .
+
+# Build frontend for production
+RUN npm run build
+
+# Serve with serve package
+RUN npm install -g serve
+
+# Expose port
+EXPOSE 3000
+
+# Start frontend
+CMD ["serve", "-s", "build", "-l", "3000"]
