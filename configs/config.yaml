@@ -1,0 +1,18 @@
+assets:
+  - BTC-USD
+  - ETH-USD
+  - AAPL
+  - EURUSD
+
+risk:
+  max_position: 100
+  max_drawdown: 0.1
+  max_exposure: 5000
+
+data:
+  historical_start: '2023-01-01'
+  historical_end: '2025-01-01'
+
+broker:
+  api_key: 'YOUR_API_KEY'
+  secret: 'YOUR_SECRET'

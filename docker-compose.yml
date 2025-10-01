@@ -1,0 +1,11 @@
+version: '3.8'
+services:
+  ai_trading_system:
+    build: .
+    volumes:
+      - ./data:/app/data
+      - ./configs:/app/configs
+      - ./logs:/app/logs
+    environment:
+      - ENV=production
+    restart: unless-stopped

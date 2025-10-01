@@ -1,4 +1,0 @@
-alpaca-trade-api
-pandas
-scikit-learn
-joblib
