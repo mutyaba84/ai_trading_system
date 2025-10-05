@@ -1,6 +1,13 @@
+fastapi
+uvicorn
+pydantic
+requests
 pandas
 numpy
+plotly
+dash
+PyYAML
+alpaca-trade-api
 scikit-learn
-matplotlib
-pyyaml
-requests
+tensorflow
+keras

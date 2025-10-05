@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Trading Control Panel</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 30px; background: #f9f9f9; }
+    h2 { color: #333; }
+    label { display: block; margin-top: 15px; font-weight: bold; }
+    input { width: 200px; padding: 8px; margin-top: 5px; }
+    button { margin-top: 20px; padding: 10px 20px; background: #007bff; color: white; border: none; cursor: pointer; }
+    button:hover { background: #0056b3; }
+    #status { margin-top: 20px; color: green; }
+  </style>
+</head>
+<body>
+  <h2>Trading Settings</h2>
+
+  <form id="settingsForm">
+    <label>Trade Size</label>
+    <input type="number" step="0.01" id="trade_size" />
+
+    <label>Stop Loss (%)</label>
+    <input type="number" step="0.01" id="stop_loss" />
+
+    <label>Take Profit (%)</label>
+    <input type="number" step="0.01" id="take_profit" />
+
+    <label>Trailing Stop (%)</label>
+    <input type="number" step="0.01" id="trailing_stop" />
+
+    <button type="submit">Update Settings</button>
+  </form>
+
+  <p id="status"></p>
+
+  <script>
+    async function fetchSettings() {
+      const res = await fetch("http://localhost:8001/settings");
+      const data = await res.json();
+      document.getElementById("trade_size").value = data.trade_size;
+      document.getElementById("stop_loss").value = data.stop_loss;
+      document.getElementById("take_profit").value = data.take_profit;
+      document.getElementById("trailing_stop").value = data.trailing_stop;
+    }
+
+    async function updateSettings(event) {
+      event.preventDefault();
+      const settings = {
+        trade_size: parseFloat(document.getElementById("trade_size").value),
+        stop_loss: parseFloat(document.getElementById("stop_loss").value),
+        take_profit: parseFloat(document.getElementById("take_profit").value),
+        trailing_stop: parseFloat(document.getElementById("trailing_stop").value),
+      };
+
+      const res = await fetch("http://localhost:8001/settings", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(settings),
+      });
+
+      const result = await res.json();
+      document.getElementById("status").innerText = "✅ Settings updated!";
+    }
+
+    document.getElementById("settingsForm").addEventListener("submit", updateSettings);
+
+    // Auto-refresh every 5 seconds
+    setInterval(fetchSettings, 5000);
+    fetchSettings();
+  </script>
+</body>
+</html>

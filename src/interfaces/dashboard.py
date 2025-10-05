@@ -1,40 +1,39 @@
-import matplotlib.pyplot as plt
-import pandas as pd
-import os
 from src.utils.logger import get_logger
-
+import matplotlib.pyplot as plt  # For future plot_pnl implementation
 
 class Dashboard:
-def __init__(self, portfolio, log_dir="logs"):
-self.portfolio = portfolio
-self.logger = get_logger("Dashboard")
-self.log_dir = log_dir
-self.pnl_history = []
+    def __init__(self, portfolio, log_dir="logs"):
+        self.portfolio = portfolio
+        self.logger = get_logger("Dashboard")
+        self.pnl_history = []
 
+    def update(self, prices=None):
+        if prices is None:
+            prices = {}
+        summary = self.show_portfolio(prices)
+        pnl = summary["total_pnl"]
+        self.pnl_history.append(pnl)
+        self.logger.info(f"Step update: Current PnL: {pnl:.2f}")
+    def show_portfolio(self, prices):
+        total_pnl = 0
+        positions_summary = {}
+        if not hasattr(self.portfolio, "positions"):
+            self.logger.error("Portfolio object missing 'positions' attribute.")
+            return {"positions": {}, "total_pnl": 0}
+        for asset, pos in self.portfolio.positions.items():
+            current_price = prices.get(asset, pos.get("avg_price", 0))
+            pos_pnl = (current_price - pos.get("avg_price", 0)) * pos.get("size", 0)
+            positions_summary[asset] = {
+                "size": pos.get("size", 0),
+                "avg_price": pos.get("avg_price", 0),
+                "pnl": pos_pnl
+            }
+            total_pnl += pos_pnl
+        return {"positions": positions_summary, "total_pnl": total_pnl}
+        return {"positions": positions_summary, "total_pnl": total_pnl}
 
-def update(self):
-self.pnl_history.append(self.portfolio.pnl)
+    def plot_pnl(self):
+        pass
 
-
-def plot_pnl(self):
-if not self.pnl_history:
-self.logger.warning("No PnL data to plot")
-return
-plt.figure(figsize=(10,5))
-plt.plot(self.pnl_history, label="PnL")
-plt.title("Portfolio PnL Over Time")
-plt.xlabel("Time Steps")
-plt.ylabel("PnL")
-plt.legend()
-plt.grid(True)
-os.makedirs(self.log_dir, exist_ok=True)
-plt.savefig(f"{self.log_dir}/pnl_chart.png")
-plt.close()
-self.logger.info(f"PnL chart saved to {self.log_dir}/pnl_chart.png")
-
-
-def export_report(self):
-os.makedirs(self.log_dir, exist_ok=True)
-df = pd.DataFrame({'PnL': self.pnl_history})
-df.to_csv(f"{self.log_dir}/pnl_history.csv", index=False)
-self.logger.info(f"PnL history exported to {self.log_dir}/pnl_history.csv")
+    def export_report(self):
+        pass

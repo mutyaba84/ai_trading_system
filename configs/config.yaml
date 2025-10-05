@@ -1,18 +1,11 @@
-assets:
-  - BTC-USD
-  - ETH-USD
-  - AAPL
-  - EURUSD
+mode: "paper"  # "live" or "paper"
 
-risk:
-  max_position: 100
-  max_drawdown: 0.1
-  max_exposure: 5000
+paper_trading:
+  broker: "alpaca"
+  api_key: "CKPV7LIKBVTQXIH2A3KN"
+  api_secret: "YE6bChwKCkK9gU5WJwfM0alc44cEruIQNiOCAMG"
+  base_url: "https://paper-api.alpaca.markets"
 
-data:
-  historical_start: '2023-01-01'
-  historical_end: '2025-01-01'
-
-broker:
-  api_key: 'YOUR_API_KEY'
-  secret: 'YOUR_SECRET'
+stop_loss: 0.02
+take_profit: 0.05
+trailing_stop: 0.01

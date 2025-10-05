@@ -1,11 +1,36 @@
-version: '3.8'
 services:
   ai_trading_system:
     build: .
+    container_name: ai_trading_system
+    command: ["python", "-m", "src.main"]
+    ports:
+      - "8000:8000"
     volumes:
-      - ./data:/app/data
-      - ./configs:/app/configs
-      - ./logs:/app/logs
+      - .:/app
     environment:
-      - ENV=production
-    restart: unless-stopped
+      - ENV=development
+    restart: always
+    depends_on:
+      - trading_dashboard
+    networks:
+      - trading_net
+
+  trading_dashboard:
+    build: .
+    container_name: trading_dashboard
+    command: ["uvicorn", "src.frontend.app:app", "--host", "0.0.0.0", "--port", "8001", "--reload"]
+    ports:
+      - "8001:8001"
+    volumes:
+      - .:/app
+    environment:
+      - ENV=development
+    restart: always
+    networks:
+      - trading_net
+
+
+
+networks:
+  trading_net:
+    driver: bridge
